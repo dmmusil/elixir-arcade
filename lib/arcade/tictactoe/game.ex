@@ -59,17 +59,12 @@ defmodule TicTacToe.Game do
     game[col] != nil && game[col] == game[col + 3] && game[col + 3] == game[col + 6]
   end
 
-  defp check_diagonal(game, diag) do
-    case diag do
-      1 -> game[1] != nil && game[1] == game[5] && game[5] == game[9]
-      2 -> game[3] != nil && game[3] == game[5] && game[5] == game[7]
-    end
-  end
+  defp check_diagonal(game, diag) when diag == 1,
+    do: game[1] != nil && game[1] == game[5] && game[5] == game[9]
 
-  defp next_player(player) do
-    case player == "X" do
-      true -> "O"
-      false -> "X"
-    end
-  end
+  defp check_diagonal(game, diag) when diag == 2,
+    do: game[3] != nil && game[3] == game[5] && game[5] == game[7]
+
+  defp next_player(player) when player == "X", do: "O"
+  defp next_player(player) when player == "O", do: "X"
 end
