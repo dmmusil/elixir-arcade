@@ -1,0 +1,4 @@
+
+<section>
+  <%= live_component @socket, TicTacToe.Board, id: :board, game: @game, status: TicTacToe.Game.status(@game) %>
+</section>
