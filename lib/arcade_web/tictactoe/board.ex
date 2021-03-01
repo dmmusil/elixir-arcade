@@ -1,36 +1,10 @@
-defmodule TicTacToe.Board do
+defmodule ArcadeWeb.TicTacToe.Board do
   use Phoenix.LiveComponent
+
+  alias ArcadeWeb.TicTacToe
 
   @impl true
   def render(assigns) do
-    # ~L"""
-    # <style>
-    #   div.column {cursor: pointer; text-align: center; height:50px;}
-    # </style>
-    # <div id="<%= @id %>">
-    #   <div class="row">
-    #     <%= live_component @socket, TicTacToe.Cell, index: 1, value: @game.board[1] %>
-    #     <%= live_component @socket, TicTacToe.Cell, index: 2, value: @game.board[2] %>
-    #     <%= live_component @socket, TicTacToe.Cell, index: 3, value: @game.board[3] %>
-    #   </div>
-    #   <div class="row">
-    #     <%= live_component @socket, TicTacToe.Cell, index: 4, value: @game.board[4] %>
-    #     <%= live_component @socket, TicTacToe.Cell, index: 5, value: @game.board[5] %>
-    #     <%= live_component @socket, TicTacToe.Cell, index: 6, value: @game.board[6] %>
-    #   </div>
-    #   <div class="row">
-    #     <%= live_component @socket, TicTacToe.Cell, index: 7, value: @game.board[7] %>
-    #     <%= live_component @socket, TicTacToe.Cell, index: 8, value: @game.board[8] %>
-    #     <%= live_component @socket, TicTacToe.Cell, index: 9, value: @game.board[9] %>
-    #   </div>
-    #   <div class="row">
-    #     <div class="column">
-    #       <%= render_status(@status, @game.player) %>
-    #     </div>
-    #   <div>
-    # </div>
-    # """
-
     ~L"""
     <style>
       div.column {cursor: pointer; text-align: center; height:50px;}
@@ -39,13 +13,13 @@ defmodule TicTacToe.Board do
       <%= for row <- 0..2 do %>
         <div class="row">
           <%= for col <- 1..3 do %>
-            <%= live_component @socket, TicTacToe.Cell, index: row * 3 + col, value: @game.board[row * 3 + col], status: @status %>
+            <%= live_component @socket, TicTacToe.Cell, index: row * 3 + col, value: @game.board[row * 3 + col], status: Arcade.Games.TicTacToe.status(@game) %>
           <% end %>
         </div>
       <% end %>
       <div class="row">
         <div class="column">
-          <%= render_status(@status, @game.player) %>
+          <%= render_status(@game) %>
         </div>
       <div>
     </div>
@@ -56,20 +30,42 @@ defmodule TicTacToe.Board do
   def handle_event("turn", %{"index" => value}, socket) do
     game = socket.assigns.game
     {index, _} = Integer.parse(value)
-    new_game_state = game |> TicTacToe.Game.mark(index, game.player)
+
+    new_game_state =
+      game
+      |> mark_cell(index, game.player)
+      |> save
+
+    # new_game_state =
+    #   state
+    #   |> Arcade.Games.update_tic_tac_toe(%{state: state})
+    #   |> Arcade.Games.TicTacToe.load_from_changeset()
 
     {:noreply,
      assign(socket,
        index: value,
        game: new_game_state,
-       status: TicTacToe.Game.status(new_game_state)
+       status: Arcade.Games.TicTacToe.status(new_game_state)
      )}
   end
 
-  defp render_status(status, player) do
-    case status do
+  defp save(game) do
+    game
+    |> Arcade.Games.update_tic_tac_toe(%{
+      board: game.board,
+      status: game.status,
+      player: game.player
+    })
+
+    game
+  end
+
+  defp mark_cell(game, index, player), do: Arcade.Games.TicTacToe.mark(game, index, player)
+
+  defp render_status(game) do
+    case Arcade.Games.TicTacToe.status(game) do
       :in_progress ->
-        "It's #{player}'s turn."
+        "It's #{game.player}'s turn."
 
       :tie ->
         "It's a tie."

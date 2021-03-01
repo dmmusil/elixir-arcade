@@ -1,4 +1,4 @@
-defmodule TicTacToe.Cell do
+defmodule ArcadeWeb.TicTacToe.Cell do
   use Phoenix.LiveComponent
 
   def render(assigns) do

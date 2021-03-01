@@ -1,0 +1,22 @@
+<h1>Show Tic tac toe</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, ArcadeWeb.TicTacToeLive.FormComponent,
+    id: @tic_tac_toe.id,
+    title: @page_title,
+    action: @live_action,
+    tic_tac_toe: @tic_tac_toe,
+    return_to: Routes.tic_tac_toe_show_path(@socket, :show, @tic_tac_toe) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>State:</strong>
+    <%= @tic_tac_toe.state %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.tic_tac_toe_show_path(@socket, :edit, @tic_tac_toe), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.tic_tac_toe_index_path(@socket, :index) %></span>

@@ -1,17 +1,41 @@
-defmodule TicTacToe.Game do
-  defstruct board: %{}, player: "X"
+defmodule Arcade.Games.TicTacToe do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "tictactoe" do
+    field :board, :map
+    field :status, :string
+    field :player, :string
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(tic_tac_toe, attrs) do
+    tic_tac_toe
+    |> cast(attrs, [:board, :status])
+    |> validate_required([:board, :status])
+  end
 
   def new() do
-    %TicTacToe.Game{board: Enum.reduce(1..9, %{}, fn i, acc -> Map.put(acc, i, nil) end)}
+    %Arcade.Games.TicTacToe{
+      board: Enum.reduce(1..9, %{}, fn i, acc -> Map.put(acc, i, nil) end),
+      status: Atom.to_string(:in_progress),
+      player: "X"
+    }
   end
 
   # If it's not the player's turn, don't let them mark
-  def mark(%TicTacToe.Game{player: player} = game, _index, mark) when player != mark, do: game
+  def mark(%Arcade.Games.TicTacToe{player: player} = game, _index, mark) when player != mark,
+    do: game
 
-  def mark(%TicTacToe.Game{} = game, index, mark) do
+  def mark(%Arcade.Games.TicTacToe{} = game, index, mark) do
     case Map.get(game.board, index, -1) do
       nil ->
-        %TicTacToe.Game{board: Map.put(game.board, index, mark), player: next_player(mark)}
+        %Arcade.Games.TicTacToe{
+          board: Map.put(game.board, index, mark),
+          player: next_player(mark)
+        }
 
       -1 ->
         raise "Invalid index"
@@ -21,7 +45,7 @@ defmodule TicTacToe.Game do
     end
   end
 
-  def status(%TicTacToe.Game{board: game}) do
+  def status(%Arcade.Games.TicTacToe{board: game}) do
     case check_winner(game) do
       nil ->
         case Enum.all?(game, fn {_i, v} -> v != nil end) do
