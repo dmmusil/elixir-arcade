@@ -13,8 +13,8 @@ defmodule Arcade.Games.TicTacToe do
   @doc false
   def changeset(tic_tac_toe, attrs) do
     tic_tac_toe
-    |> cast(attrs, [:board, :status])
-    |> validate_required([:board, :status])
+    |> cast(attrs, [:board, :status, :player])
+    |> validate_required([:board, :status, :player])
   end
 
   def new() do
@@ -26,15 +26,18 @@ defmodule Arcade.Games.TicTacToe do
   end
 
   # If it's not the player's turn, don't let them mark
-  def mark(%Arcade.Games.TicTacToe{player: player} = game, _index, mark) when player != mark,
-    do: game
+  def mark(%Arcade.Games.TicTacToe{player: player} = game, _index, mark) when player != mark do
+    game
+  end
 
   def mark(%Arcade.Games.TicTacToe{} = game, index, mark) do
     case Map.get(game.board, index, -1) do
       nil ->
         %Arcade.Games.TicTacToe{
-          board: Map.put(game.board, index, mark),
-          player: next_player(mark)
+          game
+          | board: Map.put(game.board, index, mark),
+            player: next_player(mark),
+            status: status(game)
         }
 
       -1 ->
@@ -58,7 +61,16 @@ defmodule Arcade.Games.TicTacToe do
     end
   end
 
+  defp parse_map_keys(map) do
+    Enum.into(map, %{}, fn {k, v} ->
+      {int_key, _} = Integer.parse(k)
+      {int_key, v}
+    end)
+  end
+
   def check_winner(game) do
+    game = parse_map_keys(game)
+
     cond do
       check_row(game, 1) -> game[1]
       check_row(game, 2) -> game[4]

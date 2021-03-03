@@ -66,10 +66,20 @@ defmodule Arcade.Games do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_tic_tac_toe(%TicTacToe{} = tic_tac_toe, attrs) do
-    tic_tac_toe
-    |> TicTacToe.changeset(attrs)
-    |> Repo.update()
+  def update_tic_tac_toe(%TicTacToe{} = tic_tac_toe) do
+    TicTacToe
+    |> where(id: ^tic_tac_toe.id)
+    |> Repo.update_all(
+      set: [
+        board: tic_tac_toe.board,
+        player: tic_tac_toe.player,
+        status:
+          case Arcade.Games.TicTacToe.status(tic_tac_toe) do
+            :in_progress -> "in_progress"
+            _ -> "complete"
+          end
+      ]
+    )
   end
 
   @doc """

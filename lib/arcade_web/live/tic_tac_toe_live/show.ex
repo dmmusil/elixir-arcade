@@ -13,7 +13,7 @@ defmodule ArcadeWeb.TicTacToeLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:tic_tac_toe, Games.get_tic_tac_toe!(id))}
+     |> assign(:game, Games.get_tic_tac_toe!(id))}
   end
 
   defp page_title(:show), do: "Show Tic tac toe"

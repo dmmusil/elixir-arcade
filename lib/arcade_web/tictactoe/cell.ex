@@ -23,12 +23,14 @@ defmodule ArcadeWeb.TicTacToe.Cell do
         """
 
       false ->
+        target = "#board-#{assigns.board_id}"
+
         ~L"""
         <div
           class="column"
           phx-click="turn"
           phx-value-index="<%= @index %>"
-          phx-target="#board">
+          phx-target="<%= target %>">
             <%= print %>
         </div>
         """

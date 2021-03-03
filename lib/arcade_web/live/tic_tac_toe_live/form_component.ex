@@ -13,16 +13,6 @@ defmodule ArcadeWeb.TicTacToeLive.FormComponent do
      |> assign(:changeset, changeset)}
   end
 
-  @impl true
-  def handle_event("validate", %{"tic_tac_toe" => tic_tac_toe_params}, socket) do
-    changeset =
-      socket.assigns.tic_tac_toe
-      |> Games.change_tic_tac_toe(tic_tac_toe_params)
-      |> Map.put(:action, :validate)
-
-    {:noreply, assign(socket, :changeset, changeset)}
-  end
-
   def handle_event("save", %{"tic_tac_toe" => tic_tac_toe_params}, socket) do
     save_tic_tac_toe(socket, socket.assigns.action, tic_tac_toe_params)
   end

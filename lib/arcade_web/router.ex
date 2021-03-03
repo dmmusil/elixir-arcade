@@ -20,11 +20,7 @@ defmodule ArcadeWeb.Router do
     live "/", PageLive, :index
 
     live "/tictactoe", TicTacToeLive.Index, :index
-    live "/tictactoe/new", TicTacToeLive.Index, :new
-    live "/tictactoe/:id/edit", TicTacToeLive.Index, :edit
-
     live "/tictactoe/:id", TicTacToeLive.Show, :show
-    live "/tictactoe/:id/show/edit", TicTacToeLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

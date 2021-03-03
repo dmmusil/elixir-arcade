@@ -38,11 +38,13 @@ defmodule ArcadeWeb.TicTacToeLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    tic_tac_toe = Games.get_tic_tac_toe!(id)
-    {:ok, _} = Games.delete_tic_tac_toe(tic_tac_toe)
+  def handle_event("start", _, socket) do
+    tic_tac_toe = Games.create_tic_tac_toe()
 
-    {:noreply, assign(socket, :tictactoe, list_tictactoe())}
+    {:noreply,
+     push_patch(socket,
+       to: Routes.tic_tac_toe_show_path(socket, ArcadeWeb.TicTacToeLive.Show, tic_tac_toe.id)
+     )}
   end
 
   defp list_tictactoe do

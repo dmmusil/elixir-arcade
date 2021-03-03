@@ -1,14 +1,5 @@
 <h1>Listing Tictactoe</h1>
 
-<%= if @live_action in [:new, :edit] do %>
-  <%= live_modal @socket, ArcadeWeb.TicTacToeLive.FormComponent,
-    id: @tic_tac_toe.id || :new,
-    title: @page_title,
-    action: @live_action,
-    tic_tac_toe: @tic_tac_toe,
-    return_to: Routes.tic_tac_toe_index_path(@socket, :index) %>
-<% end %>
-
 <table>
   <thead>
     <tr>
@@ -20,21 +11,14 @@
   <tbody id="tictactoe">
     <%= for tic_tac_toe <- @tictactoe do %>
       <tr id="tic_tac_toe-<%= tic_tac_toe.id %>">
-        <td><%= tic_tac_toe.state %></td>
+        <td><%= tic_tac_toe.id %></td>
 
         <td>
           <span><%= live_redirect "Show", to: Routes.tic_tac_toe_show_path(@socket, :show, tic_tac_toe) %></span>
-          <span><%= live_patch "Edit", to: Routes.tic_tac_toe_index_path(@socket, :edit, tic_tac_toe) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: tic_tac_toe.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<span><%= live_patch "New Tic tac toe", to: Routes.tic_tac_toe_index_path(@socket, :new) %></span>
-
-
-<section>
-  <%= live_component @socket, ArcadeWeb.TicTacToe.Board, id: :board, game: @game %>
-</section>
+<span><a href="#" phx-click="start"> Start new game</a></span>
