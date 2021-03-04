@@ -10,29 +10,28 @@ defmodule ArcadeWeb.TicTacToe.Cell do
 
     print =
       case assigns.value do
-        nil -> "_"
+        nil -> ""
         _ -> assigns.value
       end
 
     case complete do
       true ->
         ~L"""
-        <div class="column selected">
+        <td class="selected">
             <%= print %>
-        </div>
+        </td>
         """
 
       false ->
         target = "#board-#{assigns.board_id}"
 
         ~L"""
-        <div
-          class="column"
+        <td
           phx-click="turn"
           phx-value-index="<%= @index %>"
           phx-target="<%= target %>">
             <%= print %>
-        </div>
+        </td>
         """
     end
   end

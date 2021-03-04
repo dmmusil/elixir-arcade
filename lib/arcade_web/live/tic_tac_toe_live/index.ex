@@ -39,11 +39,11 @@ defmodule ArcadeWeb.TicTacToeLive.Index do
 
   @impl true
   def handle_event("start", _, socket) do
-    tic_tac_toe = Games.create_tic_tac_toe()
+    {:ok, tic_tac_toe} = Games.create_tic_tac_toe()
 
     {:noreply,
-     push_patch(socket,
-       to: Routes.tic_tac_toe_show_path(socket, ArcadeWeb.TicTacToeLive.Show, tic_tac_toe.id)
+     push_redirect(socket,
+       to: Routes.tic_tac_toe_show_path(socket, :show, tic_tac_toe.id)
      )}
   end
 

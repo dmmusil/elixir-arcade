@@ -7,15 +7,15 @@ defmodule ArcadeWeb.TicTacToe.Board do
   def render(assigns) do
     ~L"""
     <style>
-      div.column {cursor: pointer; text-align: center; height:50px;}
+      td {cursor: pointer; text-align: center; height:50px; width:50px; border: 1px solid black}
     </style>
-    <div id="board-<%= @id %>">
+    <table id="board-<%= @id %>">
       <%= for row <- 0..2 do %>
-        <div class="row">
+        <tr>
           <%= for col <- 1..3 do %>
             <%= live_component @socket, TicTacToe.Cell, index: row * 3 + col, value: @game.board["#{row * 3 + col}"], status: Arcade.Games.TicTacToe.status(@game), board_id: assigns.id %>
           <% end %>
-        </div>
+        </tr>
       <% end %>
       <div class="row">
         <div class="column">

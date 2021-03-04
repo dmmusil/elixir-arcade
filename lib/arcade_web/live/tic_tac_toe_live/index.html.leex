@@ -3,7 +3,8 @@
 <table>
   <thead>
     <tr>
-      <th>State</th>
+      <th>Game ID</th>
+      <th>Status</th>
 
       <th></th>
     </tr>
@@ -13,9 +14,13 @@
       <tr id="tic_tac_toe-<%= tic_tac_toe.id %>">
         <td><%= tic_tac_toe.id %></td>
 
+        <td><%= tic_tac_toe.status %></td>
+
+
         <td>
           <span><%= live_redirect "Show", to: Routes.tic_tac_toe_show_path(@socket, :show, tic_tac_toe) %></span>
         </td>
+
       </tr>
     <% end %>
   </tbody>
